@@ -66,3 +66,22 @@ class PolicyConfig(AppConfig):
 
         cfg = ModuleConfiguration.get_or_default(MODULE_NAME, DEFAULT_CFG)
         self.__load_config(cfg)
+
+        # Register Claim signal handlers here (not in models.py) to avoid
+        # circular import: claim.models imports policy.models at module level.
+        try:
+            from claim.models import Claim
+            from django.core.cache import caches
+            from django.db.models.signals import post_save, post_delete
+            from django.dispatch import receiver
+
+            _cache = caches['coverage']
+
+            @receiver(post_save, sender=Claim)
+            @receiver(post_delete, sender=Claim)
+            def clean_enquire_cache_claim(sender, instance, *args, **kwargs):
+                _cache.delete(
+                    f"eligibility_{instance.insuree.family_id or instance.insuree.id}"
+                )
+        except Exception:
+            pass  # claim module not installed

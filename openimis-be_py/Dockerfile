@@ -1,6 +1,5 @@
 FROM python:3.11-bookworm AS builder
 ENV PYTHONUNBUFFERED 1
-ARG DB_DEFAULT
 
 # System dependencies
 RUN apt-get update && apt-get install -y \
@@ -12,13 +11,6 @@ RUN apt-get update && apt-get install -y \
     git \
     jq \
     && apt-get upgrade -y
-
-# MSSQL client (optional, depending on DB_DEFAULT)
-# Commented out for Nepal PostgreSQL-only deployment
-# RUN test "$DB_DEFAULT" != "postgresql" && curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - || :
-# RUN test "$DB_DEFAULT" != "postgresql" && curl https://packages.microsoft.com/config/debian/10/prod.list > /etc/apt/sources.list.d/mssql-release.list || :
-# RUN test "$DB_DEFAULT" != "postgresql" && apt-get update || :
-# RUN test "$DB_DEFAULT" != "postgresql" && ACCEPT_EULA=Y apt-get install -y msodbcsql17 mssql-tools18 || :
 
 # Python requirements
 RUN pip install --upgrade pip

@@ -1,6 +1,5 @@
 import logging
 
-from apscheduler.schedulers.background import BackgroundScheduler
 # from apscheduler.executors.pool import ProcessPoolExecutor, ThreadPoolExecutor
 from django.conf import settings
 from django.apps import AppConfig
@@ -23,6 +22,8 @@ class ApschedulerRunnerConfig(AppConfig):
             self._setup_scheduler_background_task()
 
     def _setup_scheduler_background_task(self):
+        from apscheduler.schedulers.background import BackgroundScheduler
+
         self.scheduler = BackgroundScheduler(deepcopy(settings.SCHEDULER_CONFIG))
         for app in settings.OPENIMIS_APPS:
             self.__add_module_tasks_to_scheduler(app)

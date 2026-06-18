@@ -1,0 +1,11 @@
+code,name,acc_code,legal_form,level,sub_level,location_code,address,phone,email,care_type
+HF001,Tribhuvan University Teaching Hospital,ACC001,G,H,H,M01,Maharajgunj Kathmandu,01-4412003,tuth@health.gov.np,B
+HF002,Bir Hospital,ACC002,G,H,H,M01,Mahaboudha Kathmandu,01-4221119,birhospital@health.gov.np,B
+HF003,Patan Hospital,ACC003,G,H,H,M02,Lagankhel Lalitpur,01-5522295,patanhospital@health.gov.np,B
+HF004,Bhaktapur Hospital,ACC004,G,H,C,M03,Dudhpati Bhaktapur,01-661266,bhaktapurbhatapur@health.gov.np,B
+HF005,Western Regional Hospital,ACC005,G,H,H,M04,Ramghat Pokhara,061-520678,wrh@health.gov.np,B
+HF006,Lumbini Provincial Hospital,ACC006,G,H,H,M05,Mangalpur Butwal,071-540422,lph@health.gov.np,B
+HF007,Manmohan Cardiothoracic Vascular,ACC007,G,H,H,M01,TUTH Campus Kathmandu,01-4413000,manmohan@health.gov.np,I
+HF008,Kathmandu Medical College,ACC008,P,H,H,M01,Sinamangal Kathmandu,01-4477000,kmcth@kmcth.edu,B
+HF009,Manipal Teaching Hospital,ACC009,P,H,H,M04,Phulbari Pokhara,061-440300,manipal@manipal.edu,B
+HF010,Butwal City Hospital,ACC010,G,H,C,M05,Butwal-11,071-540600,butwalcity@health.gov.np,B

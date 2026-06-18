@@ -3729,7 +3729,7 @@ def product_derived_operational_indicators_query(user,
                                                  requested_product_id=DEFAULT_PRODUCT,
                                                  **kwargs):
     """
-    /!\ There are a lot of differences between the documentation on readthedocs and the actual report (if you manage to generate one).
+    /!\\ There are a lot of differences between the documentation on readthedocs and the actual report (if you manage to generate one).
     So, some decisions had to be made:
     - In the legacy version, 2 stored procedures were called uspSSRSDerivedIndicators1 and uspSSRSDerivedIndicators2.
     They handled data that looked similar but was different in many places. Merging the results of these two stored

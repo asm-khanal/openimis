@@ -1,0 +1,14 @@
+code,name,type,parent_code,male_population,female_population
+R01,Kathmandu Valley,R,,500000,520000
+R02,Gandaki,R,,300000,310000
+R03,Lumbini,R,,400000,420000
+D01,Kathmandu,D,R01,200000,210000
+D02,Lalitpur,D,R01,150000,160000
+D03,Bhaktapur,D,R01,100000,110000
+D04,Kaski,D,R02,150000,155000
+D05,Rupandehi,D,R03,200000,210000
+M01,Kathmandu Metropolitan City,M,D01,100000,105000
+M02,Lalitpur Metropolitan City,M,D02,80000,85000
+M03,Bhaktapur Municipality,M,D03,50000,55000
+M04,Pokhara Metropolitan City,M,D04,80000,78000
+M05,Butwal Sub-Metropolitan City,M,D05,100000,105000

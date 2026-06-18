@@ -58,12 +58,11 @@ INSTALLED_APPS = [
     "health_check.db",  # stock Django health checkers
     "health_check.cache",
     "health_check.storage",
-    "django_apscheduler",
     "channels",  # Websocket support
     "developer_tools",
     "drf_spectacular",  # Swagger UI for FHIR API
     "axes",
-    "django_opensearch_dsl",
+    # "django_opensearch_dsl",  # Commented out - OpenSearch not required for hackathon
 ]
 INSTALLED_APPS += OPENIMIS_APPS
 INSTALLED_APPS += ["apscheduler_runner", "signal_binding", "receiver_binding"]  # Signal binding should be last installed module
@@ -82,6 +81,9 @@ AUTHENTICATION_BACKENDS += [
 ]
 
 ANONYMOUS_USER_NAME = None
+
+# Demo mode: bypass authentication for hackathon
+DEMO_NO_AUTH = os.environ.get("DEMO_NO_AUTH", "false").lower() == "true"
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
@@ -122,7 +124,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "simple_history.middleware.HistoryRequestMiddleware",
     "core.middleware.SecurityHeadersMiddleware",
-    "csp.middleware.CSPMiddleware",
+    # "csp.middleware.CSPMiddleware",  # Commented out - CSP not required for hackathon
+    "hospital_payment.middleware.DemoAuthenticationMiddleware",  # Demo auth - auto-login for hackathon
 ]
 
 if DEBUG:

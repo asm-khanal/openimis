@@ -19,7 +19,6 @@ setup(
         'openimis-be-core',
         'openimis-be-claim',
         'openimis-be-location',
-        'openimis-be-payment',
     ],
     classifiers=[
         'Environment :: Web Environment',

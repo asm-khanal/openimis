@@ -1,3 +1,4 @@
+import importlib
 import os
 import logging
 from importlib import resources
@@ -10,9 +11,23 @@ logger = logging.getLogger(__name__)
 def extract_app(module):
     return "%s" % (module["name"])
 
+
+def is_module_available(module_name: str) -> bool:
+    return importlib.util.find_spec(module_name) is not None
+
+
 def openimis_apps():
     OPENIMIS_CONF = load_openimis_conf()
-    return order_modules([*map(extract_app, OPENIMIS_CONF["modules"])])
+    ordered_modules = order_modules([*map(extract_app, OPENIMIS_CONF["modules"])])
+    installed_modules = []
+
+    for module_name in ordered_modules:
+        if is_module_available(module_name):
+            installed_modules.append(module_name)
+        else:
+            logger.warning('Module "%s" is declared in openimis.json but is not installed; skipping it for local startup.', module_name)
+
+    return installed_modules
 
 
 def get_locale_folders():
@@ -35,8 +50,6 @@ def get_locale_folders():
                     basedirs.insert(0, os.path.join(dirpath, dirname))
     return basedirs
 
-import importlib
-import os
 import ast
 import warnings
 from typing import List, Dict, Set

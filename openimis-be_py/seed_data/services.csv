@@ -1,0 +1,16 @@
+code,name,type,level,price,care_type,frequency,patient_category
+SVC001,General Consultation,O,C,200.00,O,1,15
+SVC002,Specialist Consultation,O,C,500.00,O,1,15
+SVC003,X-Ray Chest,O,R,300.00,B,1,15
+SVC004,X-Ray Extremity,O,R,350.00,B,1,15
+SVC005,Ultrasound Abdomen,O,R,600.00,B,1,15
+SVC006,ECG,O,C,400.00,B,1,15
+SVC007,CBC Blood Test,O,L,150.00,B,1,15
+SVC008,Urine Routine,O,L,100.00,B,1,15
+SVC009,Blood Sugar Fasting,O,L,120.00,B,1,15
+SVC010,Liver Function Test,O,L,400.00,B,1,15
+SVC011,Normal Delivery,I,C,5000.00,I,1,15
+SVC012,Caesarean Section,I,C,15000.00,I,1,15
+SVC013,Appendectomy,I,C,20000.00,I,1,15
+SVC014,Fracture Reduction,I,C,12000.00,I,1,15
+SVC015,General Anesthesia,I,C,3000.00,I,1,15

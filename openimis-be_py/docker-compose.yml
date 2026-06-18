@@ -43,10 +43,23 @@ services:
       db:
         condition: service_healthy
     volumes:
-      # Mount hospital_payment module for editable install inside container.
-      # The path /openimis-be/openimis-be-hospital_payment_py matches what
-      # openimis.json's "-e ../openimis-be-hospital_payment_py" resolves to
-      # when pip runs from /openimis-be/script/.
+      # Bind-mount ALL sibling modules — they are NOT in the Docker build context
+      # (build context is openimis-be_py/ only), so pip install -e ../openimis-be-*
+      # would fail without these mounts.
+      - ../openimis-be-core_py:/openimis-be/openimis-be-core_py
+      - ../openimis-be-location_py:/openimis-be/openimis-be-location_py
+      - ../openimis-be-insuree_py:/openimis-be/openimis-be-insuree_py
+      - ../openimis-be-medical_py:/openimis-be/openimis-be-medical_py
+      - ../openimis-be-medical_pricelist_py:/openimis-be/openimis-be-medical_pricelist_py
+      - ../openimis-be-product_py:/openimis-be/openimis-be-product_py
+      - ../openimis-be-calculation_py:/openimis-be/openimis-be-calculation_py
+      - ../openimis-be-contribution_plan_py:/openimis-be/openimis-be-contribution_plan_py
+      - ../openimis-be-claim_batch_py:/openimis-be/openimis-be-claim_batch_py
+      - ../openimis-be-claim_py:/openimis-be/openimis-be-claim_py
+      - ../openimis-be-policy_py:/openimis-be/openimis-be-policy_py
+      - ../openimis-be-calculation_py:/openimis-be/openimis-be-calculation_py
+      - ../openimis-be-contribution_plan_py:/openimis-be/openimis-be-contribution_plan_py
+      - ../openimis-be-report_py:/openimis-be/openimis-be-report_py
       - ../openimis-be-hospital_payment_py:/openimis-be/openimis-be-hospital_payment_py
       # Pip cache for faster module reinstalls
       - pip-cache:/pip-cache
@@ -77,6 +90,21 @@ services:
       rabbitmq:
         condition: service_started
     volumes:
+      # Same module bind-mounts as backend (worker needs them for pip install too)
+      - ../openimis-be-core_py:/openimis-be/openimis-be-core_py
+      - ../openimis-be-location_py:/openimis-be/openimis-be-location_py
+      - ../openimis-be-insuree_py:/openimis-be/openimis-be-insuree_py
+      - ../openimis-be-medical_py:/openimis-be/openimis-be-medical_py
+      - ../openimis-be-medical_pricelist_py:/openimis-be/openimis-be-medical_pricelist_py
+      - ../openimis-be-product_py:/openimis-be/openimis-be-product_py
+      - ../openimis-be-calculation_py:/openimis-be/openimis-be-calculation_py
+      - ../openimis-be-contribution_plan_py:/openimis-be/openimis-be-contribution_plan_py
+      - ../openimis-be-claim_batch_py:/openimis-be/openimis-be-claim_batch_py
+      - ../openimis-be-claim_py:/openimis-be/openimis-be-claim_py
+      - ../openimis-be-policy_py:/openimis-be/openimis-be-policy_py
+      - ../openimis-be-calculation_py:/openimis-be/openimis-be-calculation_py
+      - ../openimis-be-contribution_plan_py:/openimis-be/openimis-be-contribution_plan_py
+      - ../openimis-be-report_py:/openimis-be/openimis-be-report_py
       - ../openimis-be-hospital_payment_py:/openimis-be/openimis-be-hospital_payment_py
       - pip-cache:/pip-cache
     entrypoint: []
@@ -87,30 +115,6 @@ services:
         cd /openimis-be/openIMIS &&
         celery -A openIMIS worker --loglevel=INFO"
     restart: always
-
-  # MSSQL database - commented out, not required for Nepal PostgreSQL deployment
-  # db-mssql:
-  #   container_name: ${PROJECT_NAME:-openimis}-mssql
-  #   image: ghcr.io/openimis/openimis-mssql:${DB_TAG:-develop}
-  #   restart: always
-  #   user: root
-  #   environment:
-  #     - DB_PASSWORD=$MSSQL_DB_PASSWORD
-  #     - SA_PASSWORD=$MSSQL_DB_PASSWORD
-  #     - DB_NAME=$MSSQL_DB_NAME
-  #     - DB_USER=$MSSQL_DB_USER
-  #     - ACCEPT_EULA=Y
-  #     - INIT_MODE=demo
-  #   healthcheck:
-  #     test: "bash /app/healthcheck.sh"
-  #     interval: 10s
-  #     timeout: 5s
-  #     retries: 5
-  #     start_period: 100s
-  #   volumes:
-  #     - database-mssql:/var/opt/mssql/data
-  #   ports:
-  #     - 1433:1433
 
   # OpenSearch - commented out, not required for hospital payment module
   # opensearch:
@@ -130,5 +134,4 @@ services:
 volumes:
   database:
   pip-cache:
-  # database-mssql:  # Commented out - MSSQL not required
   # opensearch-data:  # Commented out - OpenSearch not required

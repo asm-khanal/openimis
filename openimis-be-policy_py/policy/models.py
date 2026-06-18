@@ -1,5 +1,4 @@
 import uuid
-import sys
 from core import fields
 from core import models as core_models
 from core.models import Officer
@@ -220,15 +219,8 @@ class PolicyRenewalMutation(core_models.UUIDModel, core_models.ObjectMutation):
         db_table = "policy_renewal_PolicyMutation"
 
 
-if "claim" in sys.modules:
-    from claim.models import Claim
-
-    @receiver(post_save, sender=Claim)
-    @receiver(post_delete, sender=Claim)
-    def clean_enquire_cache_claim(sender, instance, *args, **kwagrs):
-        cache.delete(
-            f"eligibility_{instance.insuree.family_id or instance.insuree.id}"
-        )
+# Signal handlers for Claim moved to apps.py ready() to avoid circular import
+# (claim.models imports policy.models at module level)
 
 
 @receiver(post_save, sender=Product)

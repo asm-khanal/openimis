@@ -1,18 +1,21 @@
 import logging
 
-from apscheduler.schedulers.background import BackgroundScheduler
-
 # from apscheduler.executors.pool import ProcessPoolExecutor, ThreadPoolExecutor
 from core import get_scheduler_method_ref
-from django_apscheduler.jobstores import register_events  # , register_job
-from copy import deepcopy
-
 from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
-# Create scheduler to run in a thread inside the application process
-scheduler = BackgroundScheduler(deepcopy(settings.SCHEDULER_CONFIG))
+
+class _DisabledScheduler:
+    def get_jobs(self):
+        return []
+
+    def start(self):
+        return None
+
+
+scheduler = _DisabledScheduler()
 
 
 def schedule_tasks(task_scheduler):
@@ -37,11 +40,17 @@ def schedule_tasks(task_scheduler):
 
 
 def start():
+    from copy import deepcopy
+    from apscheduler.schedulers.background import BackgroundScheduler
+    from django_apscheduler.jobstores import register_events  # , register_job
+    global scheduler
+
     if settings.DEBUG:
         # Hook into the apscheduler logger
         logging.basicConfig()
         logging.getLogger("apscheduler").setLevel(logging.DEBUG)
 
+    scheduler = BackgroundScheduler(deepcopy(settings.SCHEDULER_CONFIG))
     schedule_tasks(scheduler)
 
     # Add the scheduled jobs to the Django admin interface

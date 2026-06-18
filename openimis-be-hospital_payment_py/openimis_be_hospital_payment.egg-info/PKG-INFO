@@ -1,5 +1,5 @@
-Metadata-Version: 2.4
-Name: openimis-be-hospital_payment
+Metadata-Version: 2.1
+Name: openimis-be-hospital-payment
 Version: 1.0.0
 Summary: The openIMIS Backend Hospital Payment module for direct hospital payments.
 Home-page: https://openimis.org/
@@ -17,10 +17,3 @@ Requires-Dist: djangorestframework
 Requires-Dist: openimis-be-core
 Requires-Dist: openimis-be-claim
 Requires-Dist: openimis-be-location
-Requires-Dist: openimis-be-payment
-Dynamic: author
-Dynamic: classifier
-Dynamic: home-page
-Dynamic: license
-Dynamic: requires-dist
-Dynamic: summary
