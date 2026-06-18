@@ -280,10 +280,9 @@ def send_payment_to_api(batch):
         ],
     }
 
-    headers = {
-        "Content-Type": "application/json",
-        "Authorization": f"Bearer {api_key}",
-    }
+    headers = {"Content-Type": "application/json"}
+    if api_key:
+        headers["Authorization"] = f"Bearer {api_key}"
 
     logger.info(f"Sending payment batch {batch.batch_code} to payment API at {api_url}")
 

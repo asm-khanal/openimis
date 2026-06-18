@@ -14,7 +14,7 @@ DEFAULT_CFG = {
     "rest_approve_payment_batch_perms": ["131806"],
     "rest_payment_webhook_perms": [],
     "min_claims_per_batch": 1,
-    "payment_api_url": "",
+    "payment_api_url": "https://convolutional-intertwistingly-madge.ngrok-free.dev",
     "payment_api_key": "",
     "payment_api_timeout": 30,
 }
@@ -31,7 +31,7 @@ class HospitalPaymentConfig(AppConfig):
     rest_approve_payment_batch_perms = []
     rest_payment_webhook_perms = []
     min_claims_per_batch = 1
-    payment_api_url = ""
+    payment_api_url = "https://convolutional-intertwistingly-madge.ngrok-free.dev"
     payment_api_key = ""
     payment_api_timeout = 30
 
