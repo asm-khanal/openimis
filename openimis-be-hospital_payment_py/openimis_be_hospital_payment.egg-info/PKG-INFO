@@ -1,0 +1,26 @@
+Metadata-Version: 2.4
+Name: openimis-be-hospital_payment
+Version: 1.0.0
+Summary: The openIMIS Backend Hospital Payment module for direct hospital payments.
+Home-page: https://openimis.org/
+Author: openIMIS
+License: GNU AGPL v3
+Classifier: Environment :: Web Environment
+Classifier: Framework :: Django
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: GNU Affero General Public License v3
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3.11
+Requires-Dist: django
+Requires-Dist: djangorestframework
+Requires-Dist: openimis-be-core
+Requires-Dist: openimis-be-claim
+Requires-Dist: openimis-be-location
+Requires-Dist: openimis-be-payment
+Dynamic: author
+Dynamic: classifier
+Dynamic: home-page
+Dynamic: license
+Dynamic: requires-dist
+Dynamic: summary
