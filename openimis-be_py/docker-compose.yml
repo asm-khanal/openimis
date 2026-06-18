@@ -1,5 +1,3 @@
-version: "3.7"
-
 services:
   db:
     container_name: ${PROJECT_NAME:-openimis}-db
@@ -19,6 +17,76 @@ services:
     restart: always
     ports:
       - 5432:5432
+
+  rabbitmq:
+    container_name: ${PROJECT_NAME:-openimis}-rabbitmq
+    image: rabbitmq:3-management-alpine
+    restart: always
+    ports:
+      - 5672:5672
+      - 15672:15672
+
+  backend:
+    container_name: ${PROJECT_NAME:-openimis}-backend
+    build:
+      context: .
+      target: dev
+    env_file:
+      - .env
+    environment:
+      - DJANGO_SETTINGS_MODULE=openIMIS.settings
+      - PSQL_DB_HOST=db
+      - CELERY_BROKER_URL=amqp://rabbitmq:5672
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      # Mount hospital_payment module for editable install inside container.
+      # The path /openimis-be/openimis-be-hospital_payment_py matches what
+      # openimis.json's "-e ../openimis-be-hospital_payment_py" resolves to
+      # when pip runs from /openimis-be/script/.
+      - ../openimis-be-hospital_payment_py:/openimis-be/openimis-be-hospital_payment_py
+      # Pip cache for faster module reinstalls
+      - pip-cache:/pip-cache
+    entrypoint: []
+    command: >
+      bash -c "cd /openimis-be/script &&
+        python modules-requirements.py ../openimis.json > modules-requirements.txt &&
+        pip install --cache-dir /pip-cache -r modules-requirements.txt &&
+        cd /openimis-be/openIMIS &&
+        python manage.py migrate --no-input &&
+        python server.py"
+    restart: always
+
+  worker:
+    container_name: ${PROJECT_NAME:-openimis}-worker
+    build:
+      context: .
+      target: dev
+    env_file:
+      - .env
+    environment:
+      - DJANGO_SETTINGS_MODULE=openIMIS.settings
+      - PSQL_DB_HOST=db
+      - CELERY_BROKER_URL=amqp://rabbitmq:5672
+    depends_on:
+      db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_started
+    volumes:
+      - ../openimis-be-hospital_payment_py:/openimis-be/openimis-be-hospital_payment_py
+      - pip-cache:/pip-cache
+    entrypoint: []
+    command: >
+      bash -c "cd /openimis-be/script &&
+        python modules-requirements.py ../openimis.json > modules-requirements.txt &&
+        pip install --cache-dir /pip-cache -r modules-requirements.txt &&
+        cd /openimis-be/openIMIS &&
+        celery -A openIMIS worker --loglevel=INFO"
+    restart: always
 
   # MSSQL database - commented out, not required for Nepal PostgreSQL deployment
   # db-mssql:
@@ -61,5 +129,6 @@ services:
 
 volumes:
   database:
+  pip-cache:
   # database-mssql:  # Commented out - MSSQL not required
   # opensearch-data:  # Commented out - OpenSearch not required

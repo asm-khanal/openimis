@@ -1,0 +1,52 @@
+# Version control
+.git
+.gitignore
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info
+.eggs
+dist/
+build/
+
+# Virtual environments
+.venv
+venv/
+env/
+
+# IDE
+.idea/
+.vscode/
+.devcontainer/
+
+# Testing
+.cache
+.coverage
+htmlcov/
+.tox/
+
+# Docker
+docker-compose.yml
+Dockerfile
+
+# Node (not used in this Python backend)
+node_modules/
+package.json
+package-lock.json
+
+# Misc
+*.log
+*.md
+*.sqlite3
+sqlite.db
+.env
+.env.openSearch
+.flake8
+.sonar-project.properties
+.travis.yml
+features/
+fixtures/
