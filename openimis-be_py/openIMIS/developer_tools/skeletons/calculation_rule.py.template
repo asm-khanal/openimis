@@ -1,0 +1,51 @@
+import uuid
+##from {{module_name}}.apps import AbsCalculationRule
+##from {{module_name}}.config import CLASS_RULE_PARAM_VALIDATION, DESCRIPTION_CONTRIBUTION_VALUATION, FROM_TO
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext as _
+##from core.signals import *
+##from core import datetime
+from django.contrib.contenttypes.models import ContentType
+
+
+class {{class_name}}(AbsCalculationRule):
+    version = 1
+    ##uuid = "{{uuid_rule}}"
+    calculation_rule_name = "calculation_rule_name"
+    ##description = DESCRIPTION_CONTRIBUTION_VALUATION
+    ##impacted_class_parameter = CLASS_RULE_PARAM_VALIDATION
+    ##date_valid_from = datetime.datetime(2000, 1, 1)
+    date_valid_to = None
+    status = "active"
+    ##from_to = FROM_TO
+    type = "type"
+    sub_type = "sub_type"
+
+
+#    @classmethod
+#    def ready(cls):
+#        now = datetime.datetime.now()
+#        condition_is_valid = (now >= cls.date_valid_from and now <= cls.date_valid_to) \
+#            if cls.date_valid_to else (now >= cls.date_valid_from and cls.date_valid_to is None)
+#        if  condition_is_valid:
+#            cls.status = "inactive"
+            
+    @classmethod
+    def active_for_object(cls, instance, context, type, sub_type):
+        pass
+
+    @classmethod
+    def check_calculation(cls, instance):
+        pass
+
+    @classmethod
+    def calculate(cls, instance, **kwargs):
+        pass
+
+    @classmethod
+    def get_linked_class(cls, sender, class_name, **kwargs):
+        pass
+
+    @classmethod
+    def convert(cls, instance, convert_to, **kwargs):
+        pass
