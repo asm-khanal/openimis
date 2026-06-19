@@ -1,0 +1,7 @@
+username,password,email,role
+admin,admin123,admin@example.com,admin
+staff1,staff123,staff1@example.com,staff
+staff2,staff123,staff2@example.com,staff
+staff3,staff123,staff3@example.com,staff
+staff4,staff123,staff4@example.com,staff
+staff5,staff123,staff5@example.com,staff

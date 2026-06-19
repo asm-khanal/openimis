@@ -132,215 +132,68 @@ python manage.py seed_data --clean            # Delete existing data first
 - `ROW_SECURITY=False`
 
 ### 7. Requirements Cleanup
+## TODO — Agent action plan (clear, actionable steps)
 
-**File:** `openimis-be_py/requirements.txt`
+Purpose: a compact checklist an automated agent can follow to prepare a hackathon-ready deployment (backend + minified frontend + seeded demo data).
 
-Commented out (not needed for hackathon):
-- `django-opensearch-dsl==0.5.1` — OpenSearch not used
-- `django-csp` — CSP not needed for demo
+Status legend: [ ] not-started  [~] in-progress  [x] done
 
-Kept (required by code):
-- `django-redis==5.4.0` — Required by `location/models.py` import (RedisCache class). LocMemCache is default, Redis not needed at runtime.
+Priority tasks
+- [~] 1) Validate backend repo and migrations
+   - Run inside `openimis-be_py`: `python manage.py migrate --check` and fix any migration errors.
+   - Acceptance: `manage.py migrate` completes without errors.
 
-Already commented out (from earlier):
-- `django-mssql-backend==2.8.1` / `mssql-django~=1.4` — PostgreSQL only
-- `pyodbc` — PostgreSQL only
+- [ ] 2) Run seed data and verify seeded entities
+   - Command: `python manage.py seed_data --families 50` (or `docker exec -it dev-backend python manage.py seed_data` when using Docker).
+   - Acceptance: `tblFamily`, `tblInsuree`, `tblPolicy`, and `tblHealthFacility` have expected rows.
 
----
+- [ ] 3) Test hospital payment flow end-to-end (manual or automated test)
+   - Steps:
+      - Create/submit/process a claim to reach `STATUS_VALUATED` (16).
+      - POST to `/api/hospital_payment/` to build a batch.
+      - POST to `/api/hospital_payment/approve/` and verify Celery task enqueues and executes.
+      - Confirm the external POST was made (logs) and `HospitalPaymentRecord` created.
+   - Acceptance: claims updated to paid/remunerated and records created.
 
-## REMAINING WORK
+- [ ] 4) Build reduced frontend (minified)
+   - Edit `frontend/openimis-dev.json` or `frontend/openimis.json` to include only required FE modules (home, claim, payment, core, product, policy as needed).
+   - Commands:
+      - `cd frontend`
+      - `yarn install`
+      - `yarn build`
+   - Acceptance: `dist/` (or build output) contains minified assets and homepage + payment UI work against backend.
 
-### Must Do Before Demo
+- [ ] 5) Docker validation (compose)
+   - Commands (from `openimis-be_py`):
+      - `docker compose up --build -d`
+      - `docker compose logs -f backend` (watch for migrations/seeding messages)
+   - Acceptance: containers `db`, `rabbitmq`, `backend`, `worker` are running, backend responds on port 8000.
 
-- [ ] **Test Docker build:** Run `docker compose build` and `docker compose up` to verify the entire stack starts
-- [ ] **Run seed data:** After containers start, exec into backend: `python manage.py seed_data`
-- [ ] **Verify migrations:** Ensure `python manage.py migrate` runs without errors for all 13 modules
-- [ ] **Test payment flow:** Submit a claim → valuate it → create payment batch → approve → verify API call to ngrok URL
+Optional/cleanup tasks
+- [ ] A) Remove unused frontend modules and files from the assembly repo (if size is an issue).
+- [ ] B) Increase seed size: run `python manage.py seed_data --families 5000` for load testing.
+- [ ] C) Replace `DEMO_NO_AUTH` with proper auth for production (post-hackathon).
 
-### Known Potential Issues
+Agent notes / commands to run
+- To run backend checks locally (venv):
+   ```powershell
+   cd d:\document\projects\openIMIS\openimis-be_py\openIMIS
+   python -m venv .venv
+   .venv\Scripts\Activate.ps1
+   pip install -r ../requirements.txt
+   python manage.py migrate
+   python manage.py seed_data --families 50
+   ```
+- To run quickly with Docker (recommended for demo):
+   ```powershell
+   cd d:\document\projects\openIMIS\openimis-be_py
+   docker compose up --build -d
+   docker exec -it dev-backend python manage.py seed_data --families 50
+   ```
 
-1. **`sentry-requirements.txt`** — Still installed in Dockerfile (`RUN pip install -r sentry-requirements.txt`). Contains only `sentry_sdk` and `urllib3` — safe.
+Keep this file updated: when the agent completes a step, mark the checkbox and add a one-line log with date and brief outcome.
 
-2. **`opensearch.py` settings file** — Still included in settings `__init__.py`. It just sets dict values (doesn't import anything), so it won't break, but the OPENSEARCH_DSL config points to a non-existent host. Harmless.
+----
 
-3. **`seed_data` command** — The `SEED_DIR` path detection may need adjustment depending on where the command runs (local vs Docker). In Docker, it looks for `/openimis-be/seed_data/`.
-
-### Fixed Issues (no longer pending)
-
-- ~~`channels-redis` / `channels-rabbitmq`~~ — Commented out (not needed, no Redis)
-- ~~`report` module from GitHub~~ — Cloned locally, now uses `-e ../openimis-be-report_py`
-- ~~`openimis.json` had 4 duplicate JSON blocks~~ — Fixed to single valid JSON
-- ~~Sibling modules not bind-mounted in Docker~~ — All 13 modules now mounted in both backend and worker
-- ~~`policy` missing `calculation`/`contribution_plan`~~ — Both modules cloned and added back
-- ~~`git+` apscheduler dependency~~ — Replaced with PyPI `django-apscheduler==0.6.2`
-- ~~All `git+` URLs removed~~ — `requirements.txt` and `openimis.json` are 100% local/offline
-
-### Nice to Have (Post-Hackathon)
-
-- [ ] Frontend reduction (mentioned in reduction.md but not started)
-- [ ] Reconciliation system (sending paid claims to SOSYS afterward)
-- [ ] More CSV data (user asked for "lakhs" — current is ~50 families, can scale with `--families` flag)
-- [ ] Proper authentication instead of demo bypass
-- [ ] Production Dockerfile stage (pre-install modules during build)
-
----
-
-## How to Run
-
-### Local Development
-```bash
-cd d:\document\projects\openIMIS\openimis-be_py
-# Install modules locally
-cd script
-python modules-requirements.py ../openimis.json > modules-requirements.txt
-pip install -r modules-requirements.txt
-# Run migrations
-cd ../openIMIS
+Modified: concise actionable plan for your agent to execute the hackathon tasks.
 python manage.py migrate
-# Load seed data
-python manage.py seed_data --families 50
-# Start server
-python manage.py runserver
-```
-
-### Docker
-```bash
-cd d:\document\projects\openIMIS\openimis-be_py
-docker compose up --build
-# In another terminal, load seed data:
-docker exec -it dev-backend python manage.py seed_data
-```
-
-### API Endpoints (Hospital Payment)
-
-| Method | URL | Purpose |
-|--------|-----|---------|
-| GET | `/api/hospital_payment/` | List payment batches |
-| POST | `/api/hospital_payment/` | Create payment batch from valuated claims |
-| GET | `/api/hospital_payment/<id>/` | Get batch detail with claims |
-| POST | `/api/hospital_payment/approve/` | Approve batch (triggers Celery payment task) |
-| POST | `/api/hospital_payment/webhook/` | Payment API webhook (no auth) |
-| GET | `/api/hospital_payment/records/` | List payment records |
-
-GraphQL endpoint: `/api/graphql/` (queries: `hospitalPaymentBatches`, `hospitalPaymentBatch`, `hospitalPaymentRecords`)
-
----
-
-## Key File Locations
-
-```
-d:\document\projects\openIMIS\
-├── openimis-be_py/                    # Main backend project
-│   ├── openimis.json                  # 13 modules (reduced from 44)
-│   ├── .env                           # Docker config + DEMO_NO_AUTH=True
-│   ├── .env.example                   # Template with Docker notes
-│   ├── .dockerignore                  # Excludes unnecessary files
-│   ├── docker-compose.yml             # 4 services: db, rabbitmq, backend, worker
-│   ├── Dockerfile                     # MSSQL commented out
-│   ├── requirements.txt               # OpenSearch/Redis/CSP commented out
-│   ├── seed_data/                     # CSV files for seeding
-│   │   ├── locations.csv
-│   │   ├── reference_data.csv
-│   │   ├── diagnoses.csv
-│   │   ├── items.csv
-│   │   ├── services.csv
-│   │   ├── products.csv
-│   │   └── health_facilities.csv
-│   └── openIMIS/
-│       └── openIMIS/
-│           └── settings/
-│               ├── base.py            # DemoAuth middleware added, OpenSearch/CSP removed
-│               ├── __init__.py        # Includes opensearch.py (harmless)
-│               └── security.py        # ROW_SECURITY setting
-│
-├── openimis-be-hospital_payment_py/   # Custom payment module
-│   ├── setup.py                       # Deps: core, claim, location
-│   └── hospital_payment/
-│       ├── apps.py                    # Payment API URL: ngrok URL
-│       ├── models.py                  # 4 models
-│       ├── services.py                # Batch creation, API call, webhook
-│       ├── views.py                   # 5 REST endpoints
-│       ├── urls.py                    # Routes
-│       ├── serializers.py             # DRF serializers
-│       ├── schema.py                  # GraphQL queries/mutations
-│       ├── tasks.py                   # Celery async payment
-│       ├── signals.py                 # Signal binding stub
-│       ├── admin.py                   # Admin registration
-│       ├── middleware.py              # DemoAuthenticationMiddleware
-│       ├── migrations/
-│       │   └── 0001_initial.py        # All 4 models
-│       └── management/
-│           └── commands/
-│               └── seed_data.py       # CSV loader + data generator
-│
-├── openimis-be-core_py/               # Core module (cloned)
-├── openimis-be-location_py/           # Location module (cloned)
-├── openimis-be-insuree_py/            # Insuree module (cloned)
-├── openimis-be-medical_py/            # Medical module (cloned)
-├── openimis-be-medical_pricelist_py/  # Medical pricelist (cloned)
-├── openimis-be-product_py/            # Product module (cloned)
-├── openimis-be-claim_py/              # Claim module (cloned)
-├── openimis-be-claim_batch_py/        # Claim batch (cloned)
-├── openimis-be-policy_py/             # Policy module (cloned)
-├── openimis-be-payment_py/            # Payment module (cloned, NOT in openimis.json)
-├── reduction.md                       # Original requirements doc
-└── plan_for_sending_claims.md         # Original implementation plan
-```
-
----
-
-## Payment Flow (End to End)
-
-```
-1. Hospital submits claim (via GraphQL mutation or REST)
-   → Claim enters STATUS_ENTERED (2)
-
-2. Claim validation runs (claim/validations.py — 2032 lines)
-   → 9-step pipeline: date → insuree/policy → pricelist → category limits → items → services → product → status → dedrem
-   → If valid: STATUS_VALUATED (16)
-
-3. Admin opens hospital_payment API → sees valuated claims grouped by hospital
-   → POST /api/hospital_payment/ creates HospitalPaymentBatch + HospitalPaymentBatchClaim records
-
-4. Admin approves batch
-   → POST /api/hospital_payment/approve/ sets STATUS_APPROVED
-   → Celery task `process_payment_batch_task` fires
-
-5. Celery worker calls payment API
-   → POST to https://convolutional-intertwistingly-madge.ngrok-free.dev
-   → Payload: batch_reference, hospital info, claims list, amounts
-   → No auth header (api_key is empty)
-
-6. Payment API responds
-   → process_payment_response() updates batch + claim statuses
-   → Creates HospitalPaymentRecord with raw response
-
-7. External payment API sends webhook
-   → POST /api/hospital_payment/webhook/ (no auth)
-   → process_webhook_payment_confirmation() updates final payment status
-```
-
----
-
-## Task Tracker
-
-| ID | Task | Status |
-|----|------|--------|
-| r1 | Analyze module dependencies | ✅ Complete |
-| r2 | Reduce openimis.json + fix setup.py | ✅ Complete (13 modules, all local paths) |
-| r3 | Create CSV seed data files | ✅ Complete (7 CSV files) |
-| r4 | Create management command | ✅ Complete (seed_data.py) |
-| r5 | Remove/simplify authentication | ✅ Complete (demo middleware) |
-| r6 | Update requirements.txt | ✅ Complete (no git+ URLs, no OpenSearch/Redis/CSP) |
-| r7 | Update reduction.md | ✅ Complete |
-| r8 | Fix openimis.json (4 duplicate JSON blocks) | ✅ Complete |
-| r9 | Bind-mount all modules in docker-compose.yml | ✅ Complete |
-| r10 | Clone report module locally | ✅ Complete |
-| r11 | Add calculation + contribution_plan back | ✅ Complete (policy FK dependency) |
-| r12 | Replace git+ apscheduler with PyPI version | ✅ Complete |
-| dc1-dc7 | Docker fixes | ✅ Complete |
-| 1-18 | Hospital payment module | ✅ Complete |
-| d1 | Docker build + up | ⬜ Pending (requires Docker Desktop running) |
-| d2 | Verify migrations inside container | ⬜ Pending |
-| d3 | Run seed_data inside container | ⬜ Pending |
-| d4 | Test full payment flow | ⬜ Pending |

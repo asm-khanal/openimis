@@ -1,0 +1,57 @@
+code,name
+A00,Cholera
+A01,Typhoid and paratyphoid fevers
+A02,Salmonella infections
+A03,Shigellosis
+A04,Other bacterial intestinal infections
+A05,Other bacterial foodborne intoxications
+A06,Amebiasis
+A09,Diarrhoea and gastroenteritis of presumed infectious origin
+B01,Varicella [chickenpox]
+B05,Measles
+B06,Rubella [German measles]
+B16,Acute hepatitis B
+B17,Other acute viral hepatitis
+B20,Human immunodeficiency virus [HIV] disease
+C00,Malignant neoplasm of lip
+C50,Malignant neoplasm of breast
+C61,Malignant neoplasm of prostate
+D25,Uterine leiomyoma
+E10,Type 1 diabetes mellitus
+E11,Type 2 diabetes mellitus
+E66,Overweight and obesity
+G40,Epilepsy and recurrent seizures
+G45,Transient cerebral ischaemic attacks
+H10,Conjunctivitis
+H40,Glaucoma
+I10,Essential (primary) hypertension
+I20,Angina pectoris
+I21,Acute myocardial infarction
+I50,Heart failure
+I63,Cerebral infarction
+I70,Atherosclerosis
+J00,Acute nasopharyngitis [common cold]
+J01,Acute sinusitis
+J02,Acute pharyngitis
+J03,Acute tonsillitis
+J06,Acute upper respiratory infections of multiple sites
+J09,Influenza due to certain identified influenza viruses
+J11,Influenza, virus not identified
+J18,Pneumonia, organism unspecified
+J20,Acute bronchitis
+J21,Acute bronchiolitis
+J45,Asthma
+K02,Dental caries
+K29,Gastritis and duodenitis
+K35,Acute appendicitis
+N10,Acute tubulo-interstitial nephritis
+N20,Calculus of kidney and ureter
+N39,Other disorders of urinary system
+O00,Ectopic pregnancy
+O20,Hemorrhage in early pregnancy
+O80,Single spontaneous delivery
+P05,Slow fetal growth and fetal malnutrition
+S02,Fracture of skull and facial bones
+S72,Fracture of femur
+S82,Fracture of lower leg
+T14,Injury of unspecified body region

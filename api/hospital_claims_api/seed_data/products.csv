@@ -1,0 +1,4 @@
+code,name,location_code,insurance_period,administration_period,lump_sum,max_members,premium_adult,premium_child,ded_insuree,max_insuree,ded_op_insuree,max_op_insuree,ded_ip_insuree,max_ip_insuree,grace_period_enrolment,start_cycle_1,start_cycle_2,registration_fee,general_assembly_fee,max_no_consultation,max_no_surgery,max_no_delivery,max_no_hospitalization,max_no_visits,max_no_antenatal
+PROD01,Basic Health Insurance,M01,12,1,500.00,5,2500.00,1200.00,500.00,50000.00,300.00,30000.00,800.00,80000.00,1,01-01,01-07,100.00,50.00,10,2,2,3,20,8
+PROD02,Premium Health Insurance,M02,12,1,1000.00,7,5000.00,2500.00,300.00,100000.00,200.00,60000.00,500.00,150000.00,1,01-01,01-07,150.00,75.00,15,3,3,5,30,12
+PROD03,Family Floater Plan,M04,12,1,750.00,6,3500.00,1800.00,400.00,75000.00,250.00,45000.00,600.00,120000.00,1,01-01,01-07,120.00,60.00,12,2,3,4,25,10

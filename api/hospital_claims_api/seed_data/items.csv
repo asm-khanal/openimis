@@ -1,0 +1,16 @@
+code,name,type,package,price,care_type,frequency,patient_category
+ITM001,Paracetamol 500mg,T,Strip,25.00,B,30,15
+ITM002,Amoxicillin 500mg,T,Strip,80.00,B,21,15
+ITM003,Metformin 500mg,T,Strip,45.00,B,60,15
+ITM004,Aspirin 75mg,T,Strip,20.00,B,30,15
+ITM005,Omeprazole 20mg,C,Box,120.00,B,30,15
+ITM006,Ceftriaxone 1g,V,Vial,150.00,I,7,15
+ITM007,Normal Saline 1000ml,I,Bottle,55.00,I,3,15
+ITM008,Dextrose 5% 1000ml,I,Bottle,60.00,I,3,15
+ITM009,Ringer's Lactate 1000ml,I,Bottle,65.00,I,3,15
+ITM010,Pethidine 50mg,I,Ampule,35.00,I,5,15
+ITM011,Diazepam 10mg,I,Ampule,30.00,B,5,15
+ITM012,Insulin Regular 100IU,V,Vial,250.00,B,30,15
+ITM013,Salbutamol Inhaler,I,Inhaler,180.00,B,30,15
+ITM014,Oxytocin 10IU,I,Ampule,40.00,I,3,15
+ITM015,Tetanus Toxoid,V,Vial,50.00,B,1,15
